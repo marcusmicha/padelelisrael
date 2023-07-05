@@ -14,7 +14,7 @@ def main():
         availabilities = scraper.execute()
         res = pretty_availabilities(availabilities)
         bot.send_message(res)
-        time.sleep(600)
+        time.sleep(300)
     return 0
 
 if __name__ == "__main__":

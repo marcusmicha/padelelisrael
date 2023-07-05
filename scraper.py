@@ -62,7 +62,6 @@ class Scraper:
         scripts = soup.find_all('script')
         for script in scripts:
             if id in script.text:
-                print(script.text)
                 tag = script.text.replace('\'', '')
                 key = re.findall(f'(?<={id}=)(.+?)(?=;)', tag)[0]
                 return key
