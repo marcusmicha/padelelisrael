@@ -11,10 +11,11 @@ def main():
     bot = TelegramBot()
     scraper = Scraper(today)
     # while(True):
+    print('scraping')
     availabilities = scraper.execute()
     res = pretty_availabilities(availabilities)
-    print(f'about to send this message \n{res}')
-    bot.send_message(res)
+    # print(f'about to send this message \n{res}')
+    # bot.send_message(res)
         # time.sleep(300)
     return 0
 
