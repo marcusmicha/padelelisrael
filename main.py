@@ -10,11 +10,12 @@ def main():
     today = datetime.datetime.now()
     bot = TelegramBot()
     scraper = Scraper(today)
-    while(True):
-        availabilities = scraper.execute()
-        res = pretty_availabilities(availabilities)
-        bot.send_message(res)
-        time.sleep(300)
+    # while(True):
+    availabilities = scraper.execute()
+    res = pretty_availabilities(availabilities)
+    print(f'about to send this message \n{res}')
+    bot.send_message(res)
+        # time.sleep(300)
     return 0
 
 if __name__ == "__main__":

@@ -16,4 +16,5 @@ class TelegramBot:
             'parse_mode': 'MarkdownV2',
             'text': message
         })
+        print(r.text)
         return r.text
