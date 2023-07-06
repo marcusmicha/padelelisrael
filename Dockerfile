@@ -1,16 +1,17 @@
-# Use the official Python image as the base image
-FROM python:3.8
+# 
+FROM python:3.9
 
-# Set the working directory in the container
-WORKDIR /app
+# 
+WORKDIR /code
 
-# Copy the application files into the working directory
-COPY . /app
+# 
+COPY ./requirements.txt /code/requirements.txt
 
-# Install the application dependencies
-RUN pip install -r requirements.txt
+# 
+RUN pip install -r /code/requirements.txt
 
-# Define the entry point for the container
-CMD ["python", "main.py"]
+# 
+COPY ./app /code/app
 
-EXPOSE 8080
+# 
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
