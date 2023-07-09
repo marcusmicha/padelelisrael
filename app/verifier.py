@@ -12,7 +12,7 @@ class Verifier:
         self.start_play_from = datetime.strptime(start_play_from, '%H:%M')
         self.start_play_to = datetime.strptime(start_play_to, '%H:%M')
         self.previous_availabilities = previous_availabilities
-        self.notification_to_send = f'New availabilities for today between {start_play_from} and {start_play_to}.\nFor {playing_time} mins.\n'
+        self.notification_to_send = f'Availabilities for today between *{start_play_from}* and *{start_play_to}*\nFor *{playing_time} mins*\n'
         self.valid_availabilities = False
 
     def get_availabilities(self, occupancies) -> dict:
@@ -84,28 +84,36 @@ class Verifier:
         time_compatibility = False
         different_slots = False
         for date in self.availabilities:
-            for club in self.availabilities[date]:         
+            for club in self.availabilities[date]:  
+                compatible_slots = []       
                 for slot in self.availabilities[date][club]:
                     if slot[0] >= self.start_play_from and slot[0] <= self.start_play_to:
                         time_compatibility = True
+                        compatible_slots.append(slot)
+                self.availabilities[date][club] = compatible_slots
         if self.previous_availabilities != self.availabilities:
             different_slots = True
-        # if time_compatibility and different_slots:
-        self.notification_to_send += self.generate_tg_notification()
-        self.valid_availabilities = True
+        if time_compatibility and different_slots:
+            self.notification_to_send += self.generate_tg_notification()
+            self.valid_availabilities = True
         return self.valid_availabilities, self.availabilities, self.notification_to_send
 
     def generate_tg_notification(self) -> str:
         notif = ''
+        content_in_notif = False
         for date in self.availabilities:
             notif += f'__{date}__\n'
             for club in self.availabilities[date]:
-                notif += f'\t\t_{club}_\n'
-                notif += f'\t\t\t\tAvailabilities between\n'
+                if len(self.availabilities[date][club]) > 0:
+                    content_in_notif = True
+                    notif += f'\t\t_{club}_\n'
+                    notif += f'\t\t\t\tAvailabilities between\n'
                 for club_availability in self.availabilities[date][club]:
                     parsed_club_availability = self.date_to_str(club_availability)
                     notif += f'\t\t\t\t\t\t{parsed_club_availability[0]} and {parsed_club_availability[1]}\n'
         notif = notif.replace('-',' ')
+        if content_in_notif == False:
+            notif += "*No availabilities*"
         return notif
 
     def date_to_str(self, start_end:list) -> str:

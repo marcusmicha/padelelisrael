@@ -9,7 +9,7 @@ app = FastAPI()
 
 
 @app.get("/field_of_the_day")
-def read_root():
+def get_fields_of_the_day():
     return fields_of_the_day()
 
 def fields_of_the_day():
@@ -21,6 +21,8 @@ def fields_of_the_day():
     verifier = Verifier(occupancies, previous_availabilities=previous_availabilities)
     valid_availabilities, previous_avilabilities, notification = verifier.verify()
     if valid_availabilities:
-        print(notification)
+        print('valid')
         bot.send_notification(notification)
+    else:
+        print('not valid')
     return 0
