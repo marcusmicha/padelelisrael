@@ -12,7 +12,7 @@ class Verifier:
         self.start_play_from = datetime.strptime(start_play_from, '%H:%M')
         self.start_play_to = datetime.strptime(start_play_to, '%H:%M')
         self.previous_availabilities = previous_availabilities
-        self.notification_to_send = ''
+        self.notification_to_send = f'New availabilities for today between {start_play_from} and {start_play_to}.\nFor {playing_time} mins.\n'
         self.valid_availabilities = False
 
     def get_availabilities(self, occupancies) -> dict:
@@ -91,7 +91,7 @@ class Verifier:
         if self.previous_availabilities != self.availabilities:
             different_slots = True
         # if time_compatibility and different_slots:
-        self.notification_to_send = self.generate_tg_notification()
+        self.notification_to_send += self.generate_tg_notification()
         self.valid_availabilities = True
         return self.valid_availabilities, self.availabilities, self.notification_to_send
 
