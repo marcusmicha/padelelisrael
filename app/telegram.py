@@ -10,7 +10,7 @@ class TelegramBot:
         self.chat_id = CHAT_ID
         self.url = f'https://api.telegram.org/bot{self.bot_token}/sendMessage'
 
-    def send_message(self, message) -> None:
+    def send_notification(self, message) -> None:
         r = requests.post(self.url, json={
             'chat_id': self.chat_id,
             'parse_mode': 'MarkdownV2',

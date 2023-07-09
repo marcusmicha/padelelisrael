@@ -82,7 +82,7 @@ class Scraper:
         )
         return response.json()
     
-    def scrape(self) -> dict:
+    def execute(self) -> dict:
         occupancies = {}
         for date in self.dates_to_scrape:
             occupancies[date] = {}
@@ -94,53 +94,49 @@ class Scraper:
                     occupancies[date][field_name][field['TextoPrincipal']] = field
         return occupancies
     
-    def get_availabilities(self, occupancies) -> dict:
-        availablities = {}
-        for date in occupancies:
-            availablities[date] = {}
-            for club in occupancies[date]:
-                availablities[date][club] = {}
-                for field in occupancies[date][club]:
-                    field_occupancies  = occupancies[date][club][field]['Ocupaciones']
-                    available_hours = self.convert_occupancy(field_occupancies)
-                    availablities[date][club][field] = available_hours
-        return availablities
+    # def get_availabilities(self, occupancies) -> dict:
+    #     availablities = {}
+    #     for date in occupancies:
+    #         availablities[date] = {}
+    #         for club in occupancies[date]:
+    #             availablities[date][club] = {}
+    #             for field in occupancies[date][club]:
+    #                 field_occupancies  = occupancies[date][club][field]['Ocupaciones']
+    #                 available_hours = self.convert_occupancy(field_occupancies)
+    #                 availablities[date][club][field] = available_hours
+    #     return availablities
     
-    def convert_occupancy(self, occupancies) -> dict:
-        parsed_occupancies = self.parse_occupancy(occupancies)
-        prev_end = datetime.strptime('06:00', '%H:%M') # First hour of the day
-        available_hours = []
-        for occupancy in parsed_occupancies:
-            diff = (occupancy['start'] - prev_end).seconds / 60
-            if diff >= 90:
-               availability = {
-                    'av_start' : prev_end.strftime('%HH%M'),
-                    'av_end' : occupancy['start'].strftime('%HH%M')
-               }
-               available_hours.append(availability)
-            prev_end = occupancy['end']
-        return available_hours
+    # def convert_occupancy(self, occupancies) -> dict:
+    #     parsed_occupancies = self.parse_occupancy(occupancies)
+    #     prev_end = datetime.strptime('06:00', '%H:%M') # First hour of the day
+    #     available_hours = []
+    #     for occupancy in parsed_occupancies:
+    #         diff = (occupancy['start'] - prev_end).seconds / 60
+    #         if diff >= 90:
+    #            availability = {
+    #                 'av_start' : prev_end,
+    #                 'av_end' : occupancy['start']
+    #            }
+    #            available_hours.append(availability)
+    #         prev_end = occupancy['end']
+    #     return available_hours
 
-    def parse_occupancy(self, occupancies) -> dict:
-        parsed_occupancies = []
-        for occupancy in occupancies:
-            parsed_occupancy = {
-                'start': datetime.strptime(occupancy['StrHoraInicio'], '%H:%M'),
-                'end': datetime.strptime(occupancy['StrHoraFin'], '%H:%M'),
-                'length': int(occupancy['Minutos'])
-            }
-            parsed_occupancies.append(parsed_occupancy)
+    # def parse_occupancy(self, occupancies) -> dict:
+    #     parsed_occupancies = []
+    #     for occupancy in occupancies:
+    #         parsed_occupancy = {
+    #             'start': datetime.strptime(occupancy['StrHoraInicio'], '%H:%M'),
+    #             'end': datetime.strptime(occupancy['StrHoraFin'], '%H:%M'),
+    #             'length': int(occupancy['Minutos'])
+    #         }
+    #         parsed_occupancies.append(parsed_occupancy)
 
-        fake_parsed_occupancy = {
-                'start': datetime.strptime('00:00', '%H:%M'),
-                'end': datetime.strptime('00:00', '%H:%M'),
-                'length': 0
-            }
-        parsed_occupancies = sorted(parsed_occupancies, key=lambda d: d['start'])
-        parsed_occupancies.append(fake_parsed_occupancy)
-        return parsed_occupancies
+    #     fake_parsed_occupancy = {
+    #             'start': datetime.strptime('00:00', '%H:%M'),
+    #             'end': datetime.strptime('00:00', '%H:%M'),
+    #             'length': 0
+    #         }
+    #     parsed_occupancies = sorted(parsed_occupancies, key=lambda d: d['start'])
+    #     parsed_occupancies.append(fake_parsed_occupancy)
+    #     return parsed_occupancies
     
-    def execute(self):
-        occupancies = self.scrape()
-        availabilities = self.get_availabilities(occupancies)
-        return availabilities
