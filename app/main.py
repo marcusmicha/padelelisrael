@@ -14,7 +14,6 @@ def read_root():
 
 def fields_of_the_day():
     global previous_availabilities
-    print('lets start')
     today = datetime.datetime.now()
     bot = TelegramBot()
     scraper = Scraper(today)
@@ -22,7 +21,6 @@ def fields_of_the_day():
     verifier = Verifier(occupancies, previous_availabilities=previous_availabilities)
     valid_availabilities, previous_avilabilities, notification = verifier.verify()
     if valid_availabilities:
-        print('notif to send')
         print(notification)
         bot.send_notification(notification)
     return 0
