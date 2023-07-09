@@ -19,7 +19,7 @@ def fields_of_the_day():
     scraper = Scraper(today)
     occupancies = scraper.execute()
     verifier = Verifier(occupancies, previous_availabilities=previous_availabilities)
-    valid_availabilities, previous_avilabilities, notification = verifier.verify()
+    valid_availabilities, previous_availabilities, notification = verifier.verify()
     if valid_availabilities:
         print('valid')
         bot.send_notification(notification)
