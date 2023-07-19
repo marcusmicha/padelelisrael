@@ -1,4 +1,5 @@
 from datetime import datetime
+from copy import deepcopy
 
 class Verifier:
     def __init__(self,
@@ -96,6 +97,7 @@ class Verifier:
         if time_compatibility and different_slots:
             self.notification_to_send += self.generate_tg_notification()
             self.valid_availabilities = True
+        self.previous_availabilities = self.availabilities
         return self.valid_availabilities, self.availabilities, self.notification_to_send
 
     def generate_tg_notification(self) -> str:
@@ -109,7 +111,7 @@ class Verifier:
                     notif += f'\t\t_{club}_\n'
                     notif += f'\t\t\t\tAvailabilities between\n'
                 for club_availability in self.availabilities[date][club]:
-                    parsed_club_availability = self.date_to_str(club_availability)
+                    parsed_club_availability = self.date_to_str(deepcopy(club_availability))
                     notif += f'\t\t\t\t\t\t{parsed_club_availability[0]} and {parsed_club_availability[1]}\n'
         notif = notif.replace('-',' ')
         if content_in_notif == False:
