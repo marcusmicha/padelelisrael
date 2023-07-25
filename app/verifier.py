@@ -42,6 +42,9 @@ class Verifier:
                }
                available_hours.append(availability)
             prev_end = occupancy['end']
+            # Trick to avoid entire day availability
+            if prev_end == datetime(1900, 1, 1, 0, 0):
+                prev_end = datetime(1900, 1, 1, 23, 59)
         return available_hours
 
     def parse_occupancy(self, field_occupancies) -> dict:
