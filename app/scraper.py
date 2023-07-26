@@ -7,7 +7,7 @@ class Scraper:
     def __init__(
             self, start_date: datetime,
             days_span:str = 0, place_ids:list = [4,5],
-            key_id: str = 'jl90Mjda288kk',
+            key_id: str = 'hl90njda2b89k',
             url:str = 'https://padelisrael.matchpoint.com.es/Booking/Grid.aspx') -> None:
         self.start_date = start_date
         self.place_ids = place_ids
